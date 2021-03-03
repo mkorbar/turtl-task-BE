@@ -1,10 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const config = require("./config");
 
 const Post = require("./models/post");
 
-const conn_string = `mongodb+srv://${config.database.user}:${config.database.password}@${config.database.host}`;
+const conn_string = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}`;
 
 
 mongoose.set("useNewUrlParser", true);

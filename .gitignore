@@ -48,3 +48,4 @@ Thumbs.db
 # Application files
 /backend/images/*
 /config.js
+/nodemon.json
