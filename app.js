@@ -20,6 +20,16 @@ mongoose
 
 const app = express();
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  next();
+});
+
 app.get("/api/posts", (req, res, next) => {
   const pageSize = +req.query.pagesize;
   const currentPage = +req.query.page;
@@ -44,20 +54,23 @@ app.get("/api/posts", (req, res, next) => {
 });
 
 app.get("/api/posts/:id", (req, res, next) => {
-
-    Post.findById(req.params.id)
-        .then(document => {
-            if (document) {
-                res.status(200).json({
-                    message: 'OK',
-                    post: document
-                })
-            } else {
-                res.status(404).json({
-                    message: 'Post not found!'
-                })
-            }
-        })
+  if  (req.params.id.match(/^[0-9a-fA-F]{24}$/))  {
+      return Post.findById(req.params.id).then((document) => {
+        if (document) {
+          res.status(200).json({
+            message: "OK",
+            post: document,
+          });
+        } else {
+          res.status(404).json({
+            message: "Post not found",
+          });
+        }
+      });
+  }
+  res.status(400).json({
+    message: "Wrong id format",
+  });
 });
 
 module.exports = app;
